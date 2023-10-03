@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
     class Process {
         private int pid;
         private int startAddress;
@@ -31,7 +32,7 @@ import java.util.Scanner;
         }
     }
 
-public class GerenciadorMemoria {
+    public class GerenciadorMemoria {
         private static char[] memory;
         private static List<Process> processTable = new ArrayList<>();
 
@@ -56,13 +57,17 @@ public class GerenciadorMemoria {
                 int opcao = scanner.nextInt();
 
                 switch (opcao) {
-                    case 1:
+                    case 1: /* Armazenando a memoria  instrui o gerenciador a
+                        alocar um array com o tamanho de bytes especificados. Com este
+                        array é que o gerenciador irá trabalhar para carregar os processos.*/
 
                         int memorySize = scanner.nextInt();
                         initializeMemory(memorySize);
 
                         break;
-                    case 2:
+                    case 2: /* Carregando o load Quando este comando for executado o
+                            gerenciador de memória deverá procurar no array um espaço livre
+                            contíguo grande o suficiente para acomodar o novo processo.*/
 
                         int processSize = scanner.nextInt();
                         int pid = scanner.nextInt();
@@ -70,41 +75,44 @@ public class GerenciadorMemoria {
                         loadProcess(processSize, pid, fillChar);
 
                         break;
-                    case 3:
+                    case 3: // Guardando o pid
 
                         pid = scanner.nextInt();
                         deleteProcess(pid);
 
                         break;
-                    case 4:
+                    case 4: /*apaga toda a memória, reinicializa todas as estruturas de dados de controle.
+                    O único comando que pode ser executado após um reset é o mem*/
 
                         resetMemory();
 
                         break;
-                    case 5:
+                    case 5: /*exibe na tela o endereço de início, o endereço de fim, o caracter de preenchimento e o tamanho
+                              em bytes da partição de memória ocupada pelo processo identificado pelo pid.*/
 
                         pid = scanner.nextInt();
                         dumpProcess(pid);
 
                         break;
-                    case 6:
+                    case 6: /*deve mostrar a situação de toda a memória, ou seja, partições que estão alocadas com as informações
+                              do processo e as partições livres (buracos) a partir do início do array. Uma visualização gráfica é desejável*/
 
                         dumpMemory();
 
                         break;
-                    case 7:
+                    case 7: // Fechando o programa
 
                         controlador = false;
 
                         break;
 
-                    default:
+                    default: // Ficar avisando o programa que nao acho alguma opcao
                         System.out.println("\nOpcao Invalida!\n");
                 }
             }
 
         }
-        private static void initializeMemory(int memorySize) {
+        private static void initializeMemory(int memorySize) {      //Inicializando a memoria
             memory = new char[memorySize];
             for (int i = 0; i < memorySize; i++) {
                 memory[i] = '$';
@@ -113,7 +121,7 @@ public class GerenciadorMemoria {
             System.out.println("Memória alocada com sucesso.");
         }
 
-        private static void loadProcess(int processSize, int pid, char fillChar) {
+        private static void loadProcess(int processSize, int pid, char fillChar) {  // Guardando o tamanho da memoria desejavel
             int start = -1;
             for (int i = 0; i < memory.length; i++) {
                 if (memory[i] == '$' && (i + processSize) <= memory.length) {
@@ -134,7 +142,7 @@ public class GerenciadorMemoria {
             }
         }
 
-        private static void deleteProcess(int pid) {
+        private static void deleteProcess(int pid) { // Deletando a memoria
             Process processToDelete = null;
             for (Process process : processTable) {
                 if (process.getPid() == pid) {
@@ -154,13 +162,13 @@ public class GerenciadorMemoria {
             }
         }
 
-        private static void resetMemory() {
+        private static void resetMemory() { // Resetando toda a memoria
             memory = null;
             processTable.clear();
             System.out.println("Memória resetada.");
         }
 
-        private static void dumpProcess(int pid) {
+        private static void dumpProcess(int pid) {  // exibe na tela o endereço de início, o endereço de fim, o caracter de preenchimento e o tamanho em bytes da partição de memória ocupada
             for (Process process : processTable) {
                 if (process.getPid() == pid) {
                     System.out.println("PID: " + process.getPid());
@@ -174,7 +182,7 @@ public class GerenciadorMemoria {
             System.out.println("Processo não encontrado. PID: " + pid);
         }
 
-        private static void dumpMemory() {
+        private static void dumpMemory() { // Mostra a situacao da memoria
             System.out.println("Estado da Memória:");
             for (int i = 0; i < memory.length; i++) {
                 if (i % 40 == 0 && i != 0) {
